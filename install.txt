@@ -1,0 +1,7 @@
+gorm
+	go get -u gorm.io/gorm
+	go get gorm.io/driver/postgres
+gin	
+	go get -u github.com/gin-gonic/gin
+config
+	go get -u github.com/ilyakaznacheev/cleanenv
