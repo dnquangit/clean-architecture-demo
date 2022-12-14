@@ -19,6 +19,8 @@ func (s *server) Run() {
 	s.ginEngine = gin.Default()
 
 	// Init repositories
+
+	// Init repositories
 	postRepo := postRepo.NewSQLRepo()
 
 	// Init useCases
