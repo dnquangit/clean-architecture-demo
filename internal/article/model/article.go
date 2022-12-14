@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type Post struct {
+type Article struct {
 	Id           uuid.UUID  `gorm:"column:id;"`
 	Title        string     `gorm:"column:title;"`
 	ShortContent string     `gorm:"column:short_content;"`
@@ -16,3 +16,5 @@ type Post struct {
 	UpdateAt     time.Time  `gorm:"column:updated_at;"`
 	Deleted      bool       `gorm:"column:deleted;"`
 }
+
+func (Article) TableName() string { return "articles" }

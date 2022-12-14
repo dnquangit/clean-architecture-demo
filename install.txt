@@ -5,3 +5,14 @@ gin
 	go get -u github.com/gin-gonic/gin
 config
 	go get -u github.com/ilyakaznacheev/cleanenv
+
+CREATE TABLE public.articles (
+    id uuid NOT NULL,
+    title character varying(100) NOT NULL,
+    content text,
+    deleted boolean DEFAULT false NOT NULL,
+    published boolean DEFAULT false,
+    published_at timestamp without time zone,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);

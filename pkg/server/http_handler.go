@@ -1,15 +1,18 @@
 package server
 
 import (
+	"context"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"go-module/pkg/log"
 	"net/http"
+	"os"
 	"time"
 )
 
 type GinHTTPHandler struct {
-	GracefullyShutdown
-	Router *gin.Engine
+	Router  *gin.Engine
+	Address string
 }
 
 func NewGinHTTPHandler(address string) (GinHTTPHandler, error) {
@@ -31,8 +34,18 @@ func NewGinHTTPHandler(address string) (GinHTTPHandler, error) {
 	}))
 
 	return GinHTTPHandler{
-		GracefullyShutdown: NewGracefullyShutdown(router, address),
-		Router:             router,
+		Router:  router,
+		Address: address,
 	}, nil
 
+}
+
+func (r *GinHTTPHandler) Run() {
+
+	if err := r.Router.Run(r.Address); err != nil && err != http.ErrServerClosed {
+		log.Error(context.Background(), "listen: %s", err)
+		os.Exit(1)
+	}
+
+	log.Info(context.Background(), "server is running ...")
 }

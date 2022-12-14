@@ -1,26 +1,30 @@
 package main
 
 import (
-	"go-module/internal/post/repo"
-	"go-module/internal/post/transport/http/gin"
-	"go-module/internal/post/usecase"
+	"fmt"
+	"go-module/cmd/api/config"
+	"go-module/internal/article/repo"
+	"go-module/internal/article/transport/http/gin"
+	"go-module/internal/article/usecase"
 	"go-module/pkg/database"
 	"go-module/pkg/server"
 )
 
 func main() {
-	db, _ := database.PostgresDB("host=postgresql.14.2 port=5432 dbname=Blog user=postgres password=12345 sslmode=disable")
+	cfg, _ := config.NewConfig()
 
-	/* post */
-	postRepo := repo.NewSQLRepo(db)
-	postUC := usecase.NewPostUC(postRepo)
-	postHandler := gin.NewPostHandler(postUC)
+	db, _ := database.PostgresDB(cfg.PG.URL)
+
+	/* article */
+	articleRepo := repo.NewSQLRepo(db)
+	articleUC := usecase.NewArticleUC(articleRepo)
+	articleHandler := gin.NewPostHandler(articleUC)
 
 	/* handler */
-	httpHandler, _ := server.NewGinHTTPHandler(":8080")
+	httpHandler, _ := server.NewGinHTTPHandler(fmt.Sprintf(":%v", cfg.Port))
 
-	/* map post to handler */
-	gin.MapRoutes(httpHandler.Router, postHandler)
+	/* map article to handler */
+	gin.MapRoutes(httpHandler.Router, articleHandler)
 
-	httpHandler.RunWithGracefullyShutdown()
+	httpHandler.Run()
 }
